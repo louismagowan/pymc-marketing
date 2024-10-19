@@ -92,6 +92,14 @@ class BaseMMM(BaseValidateMMM):
         ),
         model_config: dict | None = Field(None, description="Model configuration."),
         sampler_config: dict | None = Field(None, description="Sampler configuration."),
+        allow_negative_channels: Annotated[
+            list[str],
+            Field(
+                min_length=1,
+                description="Column names of media channel variables whose effect should be <=0",
+            ),
+        ]
+        | None = None,
         validate_data: bool = Field(
             True, description="Whether to validate the data before fitting to model"
         ),
@@ -141,6 +149,8 @@ class BaseMMM(BaseValidateMMM):
         sampler_config : Dictionary, optional
             Dictionary of parameters that initialise sampler configuration.
             Class-default defined by the user default_sampler_config method.
+        allow_negative_channels : List[str], optional
+            Column names of media channel variables whose effect should be <=0, by default None.
         validate_data : bool, optional
             Whether to validate the data before fitting to model, by default True.
         control_columns : Optional[List[str]], optional

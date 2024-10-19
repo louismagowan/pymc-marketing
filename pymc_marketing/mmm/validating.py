@@ -91,6 +91,7 @@ class ValidateChannelColumns:
     """Validate the channel columns."""
 
     channel_columns: list[str] | tuple[str]
+    allow_negative_channels: list[str] | tuple[str]
 
     @validation_method_X
     def validate_channel_columns(self, data: pd.DataFrame) -> None:
@@ -115,9 +116,12 @@ class ValidateChannelColumns:
             raise ValueError(
                 f"channel_columns {self.channel_columns} contains duplicates"
             )
-        if (data.filter(list(self.channel_columns)) < 0).any().any():
+        non_negative_channels = set(self.channel_columns) - set(
+            self.allow_negative_channels
+        )
+        if (data.filter(list(non_negative_channels)) < 0).any().any():
             raise ValueError(
-                f"channel_columns {self.channel_columns} contains negative values"
+                f"channel_columns {non_negative_channels} contains negative values"
             )
 
 
